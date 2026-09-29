@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Campus Event Portal</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; padding: 50px; text-align: center; }
+        .card { background: white; padding: 30px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 340px; }
+        h2 { color: #333; margin-bottom: 20px; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        button { background-color: #4CAF50; color: white; border: none; font-weight: bold; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Campus Event Registration</h2>
+        <form action="/register" method="POST">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <select name="event_name">
+                <option value="Tech Symposium 2026">Tech Symposium 2026</option>
+                <option value="AI & Robotics Workshop">AI & Robotics Workshop</option>
+                <option value="Annual Cultural Fest">Annual Cultural Fest</option>
+            </select>
+            <button type="submit">Generate Ticket & QR Code</button>
+        </form>
+    </div>
+</body>
+</html>
