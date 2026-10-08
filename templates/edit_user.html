@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User — Smart Campus Event Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>✏️ Edit User: {{ user['username'] }}</h2>
+    <p class="muted">Sirf username, full_name, aur role change kar sakte hain. Password change alag page pe karna hai.</p>
+
+    {% if error %}<div class="errors">{{ error }}</div>{% endif %}
+    {% if success %}<div class="ok">{{ success }}</div>{% endif %}
+
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="text" name="username" placeholder="Username"
+               value="{{ request.form.get('username', user['username']) }}" required
+               pattern="[a-z0-9_]+" minlength="3">
+        <input type="text" name="full_name" placeholder="Full Name"
+               value="{{ request.form.get('full_name', user['full_name']) }}" required>
+        <select name="role">
+            <option value="staff" {% if request.form.get('role') == 'staff' or user['role'] == 'staff' and not request.form.get('role') %}selected{% endif %}>Staff</option>
+            <option value="admin" {% if request.form.get('role') == 'admin' or user['role'] == 'admin' %}selected{% endif %}>Admin</option>
+        </select>
+        <button type="submit">Update User</button>
+    </form>
+
+    <p><a class="link" href="/users">← Back to Users List</a></p>
+</div>
+{% endblock %}

@@ -1,30 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Smart Campus Event Portal</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f0f2f5; padding: 50px; text-align: center; }
-        .card { background: white; padding: 30px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 340px; }
-        h2 { color: #333; margin-bottom: 20px; }
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        button { background-color: #4CAF50; color: white; border: none; font-weight: bold; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Registration — Smart Campus Event Portal{% endblock %}
+
+{% block content %}
     <div class="card">
         <h2>Campus Event Registration</h2>
-        <form action="/register" method="POST">
-            <input type="text" name="name" placeholder="Full Name" required>
-            <input type="email" name="email" placeholder="Email Address" required>
-            <select name="event_name">
-                <option value="Tech Symposium 2026">Tech Symposium 2026</option>
-                <option value="AI & Robotics Workshop">AI & Robotics Workshop</option>
-                <option value="Annual Cultural Fest">Annual Cultural Fest</option>
-            </select>
-            <button type="submit">Generate Ticket & QR Code</button>
-        </form>
+
+        {% if errors %}
+        <div class="errors">
+            <ul>
+                {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if student %}
+            <p class="muted" style="margin-bottom:10px;">
+                Logged in as: <strong>{{ student.full_name }}</strong> ({{ student.roll_no }}) —
+                {{ student.email }}
+            </p>
+            <form action="/register" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="text" name="name" placeholder="Full Name" value="{{ student.full_name }}"
+                       readonly tabindex="-1" aria-readonly="true">
+                <input type="email" name="email" placeholder="Email Address" value="{{ student.email }}"
+                       readonly tabindex="-1" aria-readonly="true">
+                <select name="event_name">
+                    {% for ev in EVENTS %}
+                    <option value="{{ ev }}" {% if form.get('event_name') == ev %}selected{% endif %}>{{ ev }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Generate Ticket &amp; QR Code</button>
+            </form>
+            <p class="muted" style="text-align:center;margin-top:8px;">
+                Event select karein aur ticket generate karein. Name/email student account se auto hai.
+            </p>
+        {% else %}
+            <p class="muted" style="margin-bottom:10px;">Student login ke baad hi registration possible hai.</p>
+            <form action="/register" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="email" name="email" placeholder="Email Address" required>
+                <select name="event_name">
+                    {% for ev in EVENTS %}
+                    <option value="{{ ev }}" {% if form.get('event_name') == ev %}selected{% endif %}>{{ ev }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Generate Ticket &amp; QR Code</button>
+            </form>
+            <p class="muted" style="text-align:center;margin-top:8px;">
+                <a class="link" href="{{ url_for('student_login') }}">🎓 Student Login</a>
+            </p>
+        {% endif %}
+
+        <p class="muted" style="text-align:center;">Data server pe validate hota hai — galat entry accept nahi hogi.</p>
     </div>
-</body>
-</html>
+{% endblock %}

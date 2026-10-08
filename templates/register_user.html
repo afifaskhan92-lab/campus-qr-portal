@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Create User — Smart Campus Event Portal{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2>➕ Create New User Account</h2>
+        <p class="muted">Admin: naya staff/admin user create karein</p>
+
+        {% if error %}
+        <div class="errors">{{ error }}</div>
+        {% endif %}
+
+        {% if success %}
+        <div class="ok">{{ success }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="text" name="username" placeholder="Username (min 3 chars, letters/numbers/_ only)"
+                   value="{{ request.form.get('username', '') }}" required
+                   pattern="[a-z0-9_]+" minlength="3">
+            <input type="password" name="password" placeholder="Password (min 6 characters)" required minlength="6">
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required minlength="6">
+            <input type="text" name="full_name" placeholder="Full Name (e.g. Rahul Sharma)"
+                   value="{{ request.form.get('full_name', '') }}" required>
+            <select name="role">
+                <option value="staff" {% if request.form.get('role') == 'staff' or not request.form.get('role') %}selected{% endif %}>Staff — Gate ticket scanning</option>
+                <option value="admin" {% if request.form.get('role') == 'admin' %}selected{% endif %}>Admin — Dashboard + user management</option>
+            </select>
+            <button type="submit">Create User</button>
+        </form>
+
+        <p class="muted" style="text-align:center;">
+            <a class="link" href="/dashboard">← Back to Dashboard</a>
+        </p>
+    </div>
+{% endblock %}

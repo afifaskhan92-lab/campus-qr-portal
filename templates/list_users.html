@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}User Management — Smart Campus Event Portal{% endblock %}
+
+{% block content %}
+<div class="card card-wide" style="width: 700px;">
+    <h2>👥 User Management</h2>
+    <p class="muted">Admin: saare users ki list (password hashes show nahi hote)</p>
+
+    {% if session.get('role') == 'admin' %}
+    <p style="margin-bottom: 15px;">
+        <a class="link" href="/register-user">➕ New User Create</a> |
+        <a class="link" href="/change-password">🔑 Apna Password Change</a>
+    </p>
+    {% endif %}
+
+    <table style="width: 100%;">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Full Name</th>
+            <th>Actions</th>
+        </tr>
+        {% for u in users %}
+        <tr>
+            <td>{{ u['id'] }}</td>
+            <td>{{ u['username'] }}</td>
+            <td>
+                {% if u['role'] == 'admin' %}
+                    <span class="badge">admin</span>
+                {% else %}
+                    <span class="badge" style="background:#3498db;color:white;">staff</span>
+                {% endif %}
+            </td>
+            <td>{{ u['full_name'] }}</td>
+            <td>
+                <a class="link" href="/users/{{ u['id'] }}/edit">✏️ Edit</a>
+                {% if u['role'] == 'staff' %}
+                | <a class="link" href="/users/{{ u['id'] }}/change-password">🔑 Reset Password</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% if not users %}
+    <p class="muted" style="text-align:center;">Abhi tak koi user nahi hai.</p>
+    {% endif %}
+</div>
+{% endblock %}

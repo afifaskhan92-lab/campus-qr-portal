@@ -1,27 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ticket Confirmation</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f0f2f5; padding: 50px; text-align: center; }
-        .ticket { background: white; padding: 30px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 340px; }
-        .qr-code { width: 180px; height: 180px; margin: 15px 0; border: 1px solid #ddd; padding: 5px; border-radius: 8px; }
-        .badge { background-color: #e8f5e9; color: #2e7d32; padding: 5px 10px; border-radius: 20px; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <div class="ticket">
+{% extends "base.html" %}
+
+{% block title %}Ticket Confirmation{% endblock %}
+
+{% block content %}
+    <div class="card" style="text-align:center;">
         <span class="badge">🎉 Registration Confirmed</span>
         <h3>{{ event }}</h3>
         <p><strong>Name:</strong> {{ name }}</p>
+        <p><strong>Email:</strong> {{ email }}</p>
         <p><strong>Ticket ID:</strong> {{ ticket_id }}</p>
         <div>
-            <img class="qr-code" src="{{ url_for('static', filename=qr_image) }}" alt="Ticket QR Code">
+            <img class="qr-code" src="{{ url_for('static', filename=qr_file) }}" alt="Ticket QR Code">
         </div>
-        <p style="font-size: 12px; color: #666;">Scan this QR code at the event gate for entry.</p>
+        <p class="muted">Gate pe ye QR code scan karein.</p>
         <br>
-        <a href="/" style="color: #4CAF50; text-decoration: none; font-weight: bold;">← Register Another Student</a>
+        <a class="link" href="/">← Register Another Student</a>
     </div>
-</body>
-</html>
+{% endblock %}

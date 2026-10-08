@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Student Login — Smart Campus Event Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>🎓 Student Login</h2>
+
+    {% if error %}<div class="errors">{{ error }}</div>{% endif %}
+
+    <form method="POST" action="{{ url_for('student_login') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="text" name="roll_no" placeholder="Roll No (e.g. STU001)" required autofocus
+               autocomplete="username">
+        <input type="password" name="password" placeholder="Password" required
+               autocomplete="current-password">
+        <button type="submit">Login</button>
+    </form>
+
+    <p class="muted" style="text-align:center;">
+        Agr aapka student account nahi hai to admin se contact karein.
+    </p>
+    <p style="text-align:center;"><a class="link" href="/">← Home</a></p>
+</div>
+{% endblock %}

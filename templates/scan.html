@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Ticket Scan{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>🎫 Ticket Scan / Check</h2>
+
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="text" name="ticket_id" placeholder="TICKET-XXXXXXXXXXXX" value="{{ typed }}" required>
+        <button type="submit">Check Ticket</button>
+    </form>
+
+    {% if checked %}
+        {% if reg %}
+        <div class="ok">
+            <strong>✅ VALID — Entry Allowed</strong><br><br>
+            <strong>Name:</strong> {{ reg['name'] }}<br>
+            <strong>Email:</strong> {{ reg['email'] }}<br>
+            <strong>Event:</strong> {{ reg['event_name'] }}<br>
+            <strong>Ticket ID:</strong> {{ reg['ticket_id'] }}
+        </div>
+        {% else %}
+        <div class="bad">
+            <strong>❌ INVALID TICKET — Entry Denied</strong><br>
+            <span class="muted">"{{ typed }}" DB me nahi hai.</span>
+        </div>
+        {% endif %}
+    {% endif %}
+
+    <p class="muted" style="text-align:center;">Ticket ID type karein ya QR wala link kholen.</p>
+</div>
+{% endblock %}

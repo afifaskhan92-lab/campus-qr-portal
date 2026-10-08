@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Smart Campus Event Portal{% endblock %}</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; }
+        /* ---- top navigation ---- */
+        nav { background: #2c3e50; padding: 12px 20px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+        nav a { color: #ecf0f1; text-decoration: none; font-weight: bold; font-size: 14px; }
+        nav a:hover { text-decoration: underline; }
+        nav .spacer { flex: 1; }
+        nav .who { color: #bdc3c7; font-size: 13px; }
+        /* ---- page ---- */
+        .wrap { text-align: center; padding: 40px 16px; }
+        .card { background: white; padding: 30px; border-radius: 12px; display: inline-block;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 360px; text-align: left; }
+        .card-wide { width: 940px; max-width: 100%; }
+        .card h2 { color: #333; margin-top: 0; text-align: center; }
+        /* ---- form ---- */
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0;
+                                border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+        button { background-color: #4CAF50; color: white; border: none; font-weight: bold; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        .btn-gray { background-color: #7f8c8d; }
+        .btn-gray:hover { background-color: #6c7a7b; }
+        .search { display: flex; gap: 8px; }
+        .search input { margin: 0; }
+        .search button { width: auto; margin: 0; padding: 10px 16px; }
+        .btn-register { background-color: #3498db; padding: 6px 12px; font-size: 13px; }
+        .btn-register:hover { background-color: #2980b9; }
+        /* ---- messages ---- */
+        .errors { background: #fdecea; border: 1px solid #e74c3c; color: #c0392b;
+                  padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; }
+        .errors ul { margin: 0; padding-left: 18px; }
+        .flash { background: #e8f5e9; border: 1px solid #4CAF50; color: #2e7d32;
+                 padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 14px;
+                 display: inline-block; text-align: left; }
+        .ok { background: #e8f5e9; border: 1px solid #4CAF50; color: #2e7d32;
+              padding: 12px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; }
+        .bad { background: #fdecea; border: 1px solid #e74c3c; color: #c0392b;
+               padding: 12px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; }
+        /* ---- misc ---- */
+        .badge { background-color: #e8f5e9; color: #2e7d32; padding: 5px 10px;
+                 border-radius: 20px; font-weight: bold; }
+        .qr-code { width: 180px; height: 180px; margin: 15px 0; border: 1px solid #ddd;
+                   padding: 5px; border-radius: 8px; }
+        .muted { color: #999; font-size: 12px; }
+        a.link { color: #4CAF50; font-weight: bold; text-decoration: none; }
+        .valid-h { color: #2e7d32; }
+        .invalid-h { color: #c0392b; }
+        /* ---- dashboard ---- */
+        .stats { display: flex; gap: 12px; justify-content: center; margin-bottom: 18px;
+                 flex-wrap: wrap; }
+        .stat { background: white; padding: 14px 18px; border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08); min-width: 140px; text-align: center; }
+        .stat .num { font-size: 26px; font-weight: bold; color: #2c3e50; }
+        .stat .lbl { font-size: 12px; color: #7f8c8d; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; }
+        th, td { border-bottom: 1px solid #eee; padding: 9px 8px; text-align: left; }
+        th { background: #f7f9f9; color: #555; }
+        tr:hover td { background: #fafbfc; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/">🏠 Home</a>
+        {% if session.get('user_id') %}{% if session.get('role') == 'admin' %}
+            <a href="/dashboard">📊 Dashboard</a>
+            {% if session.get('role') == 'staff' %}
+                <a href="/staff/scan">🎫 Scan Ticket</a>
+            {% endif %}
+        {% endif %}{% if session.get('role') == 'staff' %}
+            <a href="/staff/scan">🎫 Scan Ticket</a>
+        {% endif %}
+        {% if session.get('is_student') %}
+            <span class="who">🎓 {{ session.get('full_name') }} (Student: {{ session.get('roll_no') }})</span>
+            <a href="/student-logout" class="btn-gray">Logout (Student)</a>
+        {% elif session.get('user_id') %}
+            <span class="spacer"></span>
+            <span class="who">👤 {{ session.get('full_name') }} ({{ session.get('role') }})</span>
+            {% if session.get('role') == 'admin' %}
+                <a href="/register-user">➕ Add User</a> |
+                <a href="/users">👥 Users</a> |
+                <a href="/change-password">🔑 Change Password</a>
+            {% endif %}
+            <a href="/logout">Logout</a>
+        {% else %}
+            <span class="spacer"></span>
+            <a href="/login">🔐 Login</a>
+            <a href="/register-user" class="btn-register">➕ New User</a>
+            <a href="/student-login" class="btn-gray">🎓 Student Login</a>
+        {% endif %}
+    </nav>
+
+    <div class="wrap">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for m in messages %}<div class="flash">{{ m }}</div>{% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

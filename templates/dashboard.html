@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="stats">
+    <div class="stat"><div class="num">{{ total }}</div><div class="lbl">Total Registrations</div></div>
+    <div class="stat"><div class="num">{{ unique_students }}</div><div class="lbl">Unique Emails</div></div>
+    {% for e in per_event %}
+    <div class="stat"><div class="num">{{ e['c'] }}</div><div class="lbl">{{ e['event_name'] }}</div></div>
+    {% endfor %}
+</div>
+
+<div class="card card-wide">
+    <h2>📋 All Registrations</h2>
+
+    <form method="GET" action="/dashboard" class="search">
+        <input type="text" name="q" placeholder="Naam / email / ticket search..." value="{{ q }}">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if rows %}
+    <table>
+        <tr>
+            <th>#</th><th>Name</th><th>Email</th><th>Event</th><th>Ticket ID</th><th>Registered At</th>
+        </tr>
+        {% for r in rows %}
+        <tr>
+            <td>{{ r['id'] }}</td>
+            <td>{{ r['name'] }}</td>
+            <td>{{ r['email'] }}</td>
+            <td>{{ r['event_name'] }}</td>
+            <td>{{ r['ticket_id'] }}</td>
+            <td>{{ r['created_at'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="muted" style="text-align:center;">
+        {% if q %}"{{ q }}" se koi registration nahi mili.{% else %}Abhi tak koi registration nahi hui.{% endif %}
+    </p>
+    {% endif %}
+</div>
+
+{% endblock %}

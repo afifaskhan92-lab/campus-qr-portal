@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Ticket Verification{% endblock %}
+
+{% block content %}
+<div class="card" style="text-align:center;">
+    {% if valid %}
+        <h1 class="valid-h">✅ VALID TICKET</h1>
+        <p><strong>Entry Allowed</strong></p>
+        <p><strong>Name:</strong> {{ reg['name'] }}</p>
+        <p><strong>Email:</strong> {{ reg['email'] }}</p>
+        <p><strong>Event:</strong> {{ reg['event_name'] }}</p>
+        <p><strong>Ticket ID:</strong> {{ reg['ticket_id'] }}</p>
+    {% else %}
+        <h1 class="invalid-h">❌ INVALID TICKET</h1>
+        <p><strong>Entry Denied</strong></p>
+        <p class="muted">Ticket ID "{{ ticket_id }}" kisi registration se match nahi karta.</p>
+    {% endif %}
+    <br>
+    <a class="link" href="/">← Home</a>
+</div>
+{% endblock %}
